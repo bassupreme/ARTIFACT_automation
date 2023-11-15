@@ -5,6 +5,8 @@
 
 name: writeapaper
 
+on: [push]
+
 jobs:
   paper:
     runs-on: ubuntu-latest
@@ -12,15 +14,13 @@ jobs:
       # Edit here with the names of your latex file and directory (can use ".")
       DIR: documenti 
       FILE: draft
-      SCRIPT: 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install TeXlive
         run: sudo apt-get update && sudo apt-get install texlive 
       - name: LaTeX compile script
-        working-directory: ${{ env.DIR }}
-        run: sh ./ 
+        run: sh ./compile.sh
       - name: move
         run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.FILE }}.pdf ./github_artifacts/
       - name: Upload pdf as artifact
