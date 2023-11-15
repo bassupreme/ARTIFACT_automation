@@ -13,7 +13,6 @@ jobs:
     env:
       # Edit here with the names of your latex file and directory (can use ".")
       DIR: documenti 
-      FILE: draft
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,28 +21,10 @@ jobs:
       - name: LaTeX compile script
         run: sh ./compile.sh
       - name: move
-        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.FILE }}.pdf ./github_artifacts/
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/ ./github_artifacts/
       - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.FILE }}.pdf
+          name: ${{ env.DIR}}
           path: ./github_artifacts
-  deploy:
-    # Edit here if compiling multiple papers
-    needs: [paper]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          path: github_artifacts
-      - name: move
-        run: mkdir -p github_deploy && mv github_artifacts/*/* github_deploy
-      - name: deploy on orphan branch
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./github_deploy
-          publish_branch: build
-          force_orphan: true
+  
